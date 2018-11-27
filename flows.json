@@ -5,17 +5,180 @@
         "type": "tab"
     },
     {
-        "id": "7bb02bec.1fdd14",
-        "type": "bulbsin",
+        "id": "10a68f68a67771",
+        "type": "twitter",
         "z": "72f4f961.ac6328",
+        "ptype": {
+            "10a68f68a67771": [
+                {
+                    "type": "identifier",
+                    "ordinal": "primary",
+                    "description": "a tweet or twitter username can be matched to an individual",
+                    "required": [
+                        "payload.value"
+                    ],
+                    "accretion": false
+                },
+                {
+                    "type": "personal",
+                    "subtype": "gender",
+                    "ordinal": "primary",
+                    "description": "a tweet or twitter username can be matched to gender",
+                    "required": [
+                        "payload.value"
+                    ],
+                    "accretion": false
+                }
+            ]
+        },
         "name": "",
-        "subtype": "hue-ZLLPresence",
-        "x": 90,
-        "y": 294,
+        "subtype": "twitterHashTagStream",
+        "x": 226,
+        "y": 343,
         "wires": [
             [
-                "cf7cded8.0f4bb"
+                "7697a3e2a945cc"
             ]
         ]
+    },
+    {
+        "id": "7697a3e2a945cc",
+        "type": "rules",
+        "z": "72f4f961.ac6328",
+        "name": "",
+        "rules": [
+            {
+                "input": "lastmsg",
+                "attribute": "name",
+                "operator": "greater",
+                "operand": "5",
+                "outputMessage": {
+                    "type": "set-bulb-on",
+                    "payload": "off"
+                },
+                "ruleId": 0,
+                "outputType": "b5a358299cf478",
+                "outputSchema": {
+                    "type": "object",
+                    "description": "the container object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "description": "one of either 'set-bulb-on', 'set-bulb-hue', 'set-bulb-brightness'",
+                            "enum": [
+                                "set-bulb-on",
+                                "set-bulb-hue",
+                                "set-bulb-brightness"
+                            ]
+                        },
+                        "payload": {
+                            "type": "oneOf",
+                            "selector": "type",
+                            "description": "'type' dependent",
+                            "oneOf": [
+                                {
+                                    "key": "type",
+                                    "value": "set-bulb-on",
+                                    "type": "string",
+                                    "description": "\"on\" or \"off\""
+                                },
+                                {
+                                    "key": "type",
+                                    "value": "set-bulb-hue",
+                                    "type": "number",
+                                    "description": "a hue value (0-360)"
+                                },
+                                {
+                                    "key": "type",
+                                    "value": "set-bulb-brightness",
+                                    "type": "number",
+                                    "description": "a brightness value (0-255)"
+                                }
+                            ]
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "payload"
+                    ],
+                    "id": "b5a358299cf478"
+                }
+            },
+            {
+                "input": "10a68f68a67771",
+                "attribute": "payload.value",
+                "operator": "contains",
+                "operand": "my",
+                "outputMessage": {
+                    "type": "set-bulb-on",
+                    "payload": "on"
+                },
+                "ruleId": 1,
+                "outputType": "b5a358299cf478",
+                "outputSchema": {
+                    "type": "object",
+                    "description": "the container object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "description": "one of either 'set-bulb-on', 'set-bulb-hue', 'set-bulb-brightness'",
+                            "enum": [
+                                "set-bulb-on",
+                                "set-bulb-hue",
+                                "set-bulb-brightness"
+                            ]
+                        },
+                        "payload": {
+                            "type": "oneOf",
+                            "selector": "type",
+                            "description": "'type' dependent",
+                            "oneOf": [
+                                {
+                                    "key": "type",
+                                    "value": "set-bulb-on",
+                                    "type": "string",
+                                    "description": "\"on\" or \"off\""
+                                },
+                                {
+                                    "key": "type",
+                                    "value": "set-bulb-hue",
+                                    "type": "number",
+                                    "description": "a hue value (0-360)"
+                                },
+                                {
+                                    "key": "type",
+                                    "value": "set-bulb-brightness",
+                                    "type": "number",
+                                    "description": "a brightness value (0-255)"
+                                }
+                            ]
+                        }
+                    },
+                    "required": [
+                        "type",
+                        "payload"
+                    ],
+                    "id": "b5a358299cf478"
+                }
+            }
+        ],
+        "x": 412,
+        "y": 347,
+        "wires": [
+            [
+                "b5a358299cf478"
+            ]
+        ]
+    },
+    {
+        "id": "b5a358299cf478",
+        "type": "bulbsout",
+        "z": "72f4f961.ac6328",
+        "name": "",
+        "subtype": "set-bulb-on",
+        "value": "",
+        "x": 598.5,
+        "y": 311,
+        "wires": []
     }
 ]
